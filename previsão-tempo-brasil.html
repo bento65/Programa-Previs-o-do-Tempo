@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,700;1,300;1,500&display=swap"
+        rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão do Tempo</title>
+   <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("https://images.unsplash.com/photo-1527489377706-5bf97e608852?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=900&ixid=MnwxfDB8MXxyYW5kb218MHx8bGFuZHNjYXBlfHx8fHx8MTY5NzQ3NDY2MA&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1600");
+}
+
+.caixa-maior {
+    background-color: rgb(71, 71, 71);
+    opacity: 0.8;
+    border-radius: 25px;
+    padding: 20px;
+    width: 95%;
+    max-width: 450px;
+}
+
+.input-city {
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 25px;
+    font-size: 30px;
+    background-color: rgb(167, 230, 142);
+    color: black;
+    width: calc(100% - 60px)
+}
+
+.imagem-busca {
+    width: 30px;
+
+}
+
+.botao-busca {
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 50px;
+    background-color: rgb(217, 229, 44);
+    cursor: pointer;
+}
+
+.caixa-media {
+    margin-top: 10px;
+}
+
+.cidade {
+    color: #f6f3f3;
+    font-size: 30px;
+}
+
+.tempo {
+    font-size: 30px;
+    color: rgb(247, 243, 243);
+    margin-top: 10px;
+
+}
+
+.maxima{
+    font-size: 20px;
+    color: white;
+    margin-top: 10px;
+}
+ .minima{
+    font-size: 20px;
+    color: white;
+    margin-top: 10px;
+ }
+
+.caixa-menor {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.texto-previsao {
+    color: white;
+    margin-left: 20px;
+    font-size: 20px;
+    text-transform: capitalize;
+}
+
+.texto-unidade {
+    color: white;
+    font-size: 20px;
+}
+   </style>
+</head>
+
+<body>
+
+    <div class="caixa-maior">
+        <input class="input-city" placeholder="Digite o nome da cidade">
+        <button class="botao-busca" onclick="cliqueinobotao()">
+            <img class="imagem-busca" src="https://www.svgrepo.com/show/488200/find.svg" alt="busca">
+        </button>
+
+        <div class="caixa-media">
+            <h2 class="cidade">Temperatura em </h2>
+            <p class="tempo">°C</p>
+
+            <div class="caixa-2-media">
+                <p class="maxima"></p>
+                <p class="minima"></p>
+            </div>
+
+            <div class="caixa-menor">
+                <img class="imagem-previsao" alt="ícone do tempo" src="https://openweathermap.org/img/wn/04n.png">
+                <p class="texto-previsao"> Nublado</p>
+            </div>
+
+            <p class="texto-unidade">Umidade: %</p>
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+        const key = "80b9c12fe03de693c920c885dd3f0756"
+
+        function colocardadosnatela(dados) {
+            console.log(dados)
+            document.querySelector(".cidade").innerHTML = "Temperatura em " + dados.name + " é"
+            document.querySelector(".tempo").innerHTML = Math.floor(dados.main.temp) + "°C"
+            document.querySelector(".texto-previsao").innerHTML = dados.weather[0].description
+            document.querySelector(".texto-unidade").innerHTML = dados.main.humidity + "%" + " de Umidade"
+            document.querySelector(".imagem-previsao").src = `https://openweathermap.org/img/wn/${dados.weather[0].icon}.png`
+            document.querySelector(".maxima").innerHTML = "Max " + Math.floor(dados.main.temp_max) + "°C"
+            document.querySelector(".minima").innerHTML = "Min " + Math.floor(dados.main.temp_min) + "°C"
+
+
+        }
+
+        async function buscarcidade(cidade) {
+
+            const dados = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cidade}&appid=${key}&lang=pt_br&units=metric`).then(resposta => resposta.json())
+
+            colocardadosnatela(dados)
+        }
+
+        function cliqueinobotao() {
+            const cidade = document.querySelector(".input-city").value
+
+            buscarcidade(cidade)
+        }
+    </script>
+</body>
+
+</html>
